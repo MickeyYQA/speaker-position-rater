@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--
+    大型教室音响位置评分(Optimal Position Rater for Speakers in Large Classrooms) by YOU7N
+    Qiao Yang, Harmicongothan, CTB 2024 | @you7n
+    No other use or copy unless permitted.
+-->
+<html lang="zh-cmn-Hans">
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="harmicongothan,ctb" />
+    <meta name="description" content="harmicongothan" />
+    <meta name="you7n" content="harmicongothan" />
+
+    <title>音响位置</title>
+    <style>
+        body {
+            font-family: Georgia, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1em;
+            text-align: center;
+        }
+        
+        .header {
+            background-color: #f8f9fa;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header img {
+            max-width: 100%;
+        }
+        .header button {
+            margin-left: auto; /* 将按钮推到最右侧 */
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+        }
+
+        .content {
+            padding: 2em;
+            flex: 1;
+            background-color: #fff;
+            margin: 1em;
+            border-radius: 0.5em;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        .image-container {
+            flex: 1;
+            margin: 1em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 0.5em;
+        }
+
+        h1, h3 {
+            margin: 0.5em 0;
+        }
+
+        label {
+            font-size: 1.2em;
+            display: block;
+            margin-bottom: 0.5em;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 0.5em;
+            margin-bottom: 1em;
+            border: 1px solid #ccc;
+            border-radius: 0.25em;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 0.5em 1em;
+            border-radius: 0.25em;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #output {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>大型教室音响位置评分</h1>
+        <h2>Optimal Position Rater for Speakers in Large Classrooms</h2>
+        <button id="aboutButton">About CTB</button>
+    </header>
+    <div class="container">
+        <div class="content">
+            <img src="image/logopng.png" alt="展示图片" height="200">
+            <h3>By Team Harmicongothan - CTB</h3>
+            <form id="myForm">
+                教室长度/m: <input type="number" id="length" placeholder="Room length"><br>
+                教室宽度/m: <input type="number" id="width" placeholder="Room width"><br>
+                教室高度/m: <input type="number" id="height" placeholder="Room height"><br>
+                <label for="imageSelect">选择音响摆放方式 | Choose speakers position pattern:</label>
+                <select id="imageSelect" onchange="changeImage()">
+                    <option value="A">教室前端45°向内倾斜 | Room-front, facing towards the microphone</option>
+                    <option value="B">教室前端垂直向后 | Room-front, facing to room-back</option>
+                    <option value="C">教室中部平行向内 | Room-middle, facing to each others</option>
+                    <option value="D">教室后端45°向内倾斜 | Room-back, facing towards the microphone</option>
+                    <option value="E">教室后端垂直向前 | Room-back, facing to room-front </option>
+                </select>
+                
+                <br><br>
+                <button type="submit" onclick="calculateAndShow();">计算</button>
+                
+
+            </form>
+            <h2 id="result" class="hidden">教室体积 Volume:  </h2>
+            <h2 id="imageText" class="hidden"></h2>
+            <p id="ORRText" class="hidden"></p>
+            <p id="ERLText" class="hidden"></p>
+            <p id="ELSRText" class="hidden"></p>
+            <p id="TFIWText" class="hidden"></p>
+            <p id="DNBTText" class="hidden"></p>
+
+        </div>
+        <div class="sidebar">
+            <img id="dynamicImage" src="image/imgA.png" alt="Dynamic Image" style="width:100%;">
+        </div>
+    </div>
+
+    <script>
+        var _0x16f5cb=_0x5364;(function(_0x955f3c,_0x55f1ff){var _0x4dde7f=_0x5364,_0x414594=_0x955f3c();while(!![]){try{var _0xfae69f=parseInt(_0x4dde7f(0xb5))/0x1*(parseInt(_0x4dde7f(0xc9))/0x2)+parseInt(_0x4dde7f(0xc4))/0x3*(parseInt(_0x4dde7f(0xbe))/0x4)+parseInt(_0x4dde7f(0xab))/0x5+parseInt(_0x4dde7f(0xc8))/0x6*(-parseInt(_0x4dde7f(0xad))/0x7)+parseInt(_0x4dde7f(0xb4))/0x8+-parseInt(_0x4dde7f(0xa6))/0x9*(parseInt(_0x4dde7f(0x9f))/0xa)+parseInt(_0x4dde7f(0xb7))/0xb*(-parseInt(_0x4dde7f(0xbd))/0xc);if(_0xfae69f===_0x55f1ff)break;else _0x414594['push'](_0x414594['shift']());}catch(_0x3e1af0){_0x414594['push'](_0x414594['shift']());}}}(_0x531b,0x5501f));function _0x5364(_0x1c7740,_0x2537fa){var _0x531bfe=_0x531b();return _0x5364=function(_0x5364df,_0x3a4344){_0x5364df=_0x5364df-0x9f;var _0x485513=_0x531bfe[_0x5364df];return _0x485513;},_0x5364(_0x1c7740,_0x2537fa);}var ORR={'A':23.35,'B':14.15,'D':24.2,'E':11.42,'C':17.56},ERL={'A':7.44,'B':7.22,'D':9.2,'E':4.03,'C':12.09},ELSR={'A':8.66,'B':0x5,'D':9.55,'E':4.02,'C':12.86},TFIW={'A':10.15,'B':4.86,'D':6.62,'E':8.38,'C':8.38},DNBT={'A':12.16,'B':16.29,'D':10.21,'E':10.62,'C':8.14},ratings={'A':ORR['A']+ERL['A']+ELSR['A']+TFIW['A']+DNBT['A'],'B':ORR['B']+ERL['B']+ELSR['B']+TFIW['B']+DNBT['B'],'C':ORR['C']+ERL['C']+ELSR['C']+TFIW['C']+DNBT['C'],'D':ORR['D']+ERL['D']+ELSR['D']+TFIW['D']+DNBT['D'],'E':ORR['E']+ERL['E']+ELSR['E']+TFIW['E']+DNBT['E']};ratings['A']=ratings['A'][_0x16f5cb(0xb1)](0x2),ratings['B']=ratings['B'][_0x16f5cb(0xb1)](0x2),ratings['C']=ratings['C'][_0x16f5cb(0xb1)](0x2),ratings['D']=ratings['D'][_0x16f5cb(0xb1)](0x2),ratings['E']=ratings['E']['toFixed'](0x2),console[_0x16f5cb(0xb2)](ratings['A']);function calculateAndShow(){var _0x21f921=_0x16f5cb;event[_0x21f921(0xb3)](),changeImage(),showArrangement(),showResult();}function changeImage(){var _0x4a0f6e=_0x16f5cb,_0x2d44af=document[_0x4a0f6e(0xa7)](_0x4a0f6e(0xa0)),_0xa05e74=document['getElementById'](_0x4a0f6e(0xba));_0xa05e74[_0x4a0f6e(0xa5)]='image/img'+_0x2d44af[_0x4a0f6e(0xc5)]+_0x4a0f6e(0xb6);}function showResult(){var _0x44083e=_0x16f5cb,_0x2f8b13=document['getElementById']('length'),_0x201ee4=document[_0x44083e(0xa7)](_0x44083e(0xb8)),_0x28ecd3=document[_0x44083e(0xa7)](_0x44083e(0xbf)),_0x5bdd7d=document[_0x44083e(0xa7)](_0x44083e(0xc2)),_0x3ae90c=parseFloat(_0x2f8b13[_0x44083e(0xc5)]),_0xd630b1=parseFloat(_0x201ee4[_0x44083e(0xc5)]),_0x1c19a1=parseFloat(_0x28ecd3[_0x44083e(0xc5)]);if(_0x3ae90c<=0x0||_0xd630b1<=0x0||_0x1c19a1<=0x0){_0x5bdd7d[_0x44083e(0xac)]=_0x44083e(0xaf),_0x5bdd7d[_0x44083e(0xa8)][_0x44083e(0xcb)](_0x44083e(0xc6)),imageText[_0x44083e(0xa8)][_0x44083e(0xa3)](_0x44083e(0xc6)),ORRText[_0x44083e(0xa8)][_0x44083e(0xa3)](_0x44083e(0xc6)),ERLText[_0x44083e(0xa8)][_0x44083e(0xa3)](_0x44083e(0xc6)),ELSRText[_0x44083e(0xa8)][_0x44083e(0xa3)]('hidden'),TFIWText[_0x44083e(0xa8)]['add']('hidden'),DNBTText[_0x44083e(0xa8)][_0x44083e(0xa3)](_0x44083e(0xc6));return;}if(_0x3ae90c>0x64||_0xd630b1>0x64||_0x1c19a1>0x64){_0x5bdd7d[_0x44083e(0xac)]=_0x44083e(0xcc),_0x5bdd7d[_0x44083e(0xa8)][_0x44083e(0xcb)](_0x44083e(0xc6)),imageText[_0x44083e(0xa8)][_0x44083e(0xa3)](_0x44083e(0xc6)),ORRText[_0x44083e(0xa8)]['add'](_0x44083e(0xc6)),ERLText[_0x44083e(0xa8)][_0x44083e(0xa3)](_0x44083e(0xc6)),ELSRText['classList'][_0x44083e(0xa3)](_0x44083e(0xc6)),TFIWText[_0x44083e(0xa8)]['add'](_0x44083e(0xc6)),DNBTText[_0x44083e(0xa8)]['add'](_0x44083e(0xc6));return;}if(isNaN(_0x3ae90c)||isNaN(_0xd630b1)||isNaN(_0x1c19a1)){_0x5bdd7d[_0x44083e(0xac)]=_0x44083e(0xae),_0x5bdd7d[_0x44083e(0xa8)][_0x44083e(0xcb)](_0x44083e(0xc6)),imageText[_0x44083e(0xa8)]['add']('hidden'),ORRText[_0x44083e(0xa8)]['add'](_0x44083e(0xc6)),ERLText[_0x44083e(0xa8)][_0x44083e(0xa3)](_0x44083e(0xc6)),ELSRText[_0x44083e(0xa8)][_0x44083e(0xa3)](_0x44083e(0xc6)),TFIWText[_0x44083e(0xa8)][_0x44083e(0xa3)](_0x44083e(0xc6)),DNBTText[_0x44083e(0xa8)][_0x44083e(0xa3)]('hidden');return;}var _0xbeee4=_0x3ae90c*_0xd630b1*_0x1c19a1;_0x5bdd7d['textContent']=_0x44083e(0xaa)+_0xbeee4+'\x20m³',_0x5bdd7d[_0x44083e(0xa8)][_0x44083e(0xcb)]('hidden');}function showArrangement(){var _0x214da5=_0x16f5cb,_0x974a2b=document[_0x214da5(0xa7)](_0x214da5(0xa0)),_0x435d93=document[_0x214da5(0xa7)](_0x214da5(0xc0)),_0x4f5bbf=document[_0x214da5(0xa7)]('ORRText'),_0x5e004a=document[_0x214da5(0xa7)]('ERLText'),_0x5004d3=document[_0x214da5(0xa7)](_0x214da5(0xca)),_0x4c9284=document[_0x214da5(0xa7)](_0x214da5(0xcd)),_0x39e126=document[_0x214da5(0xa7)]('DNBTText'),_0x2dad9b=_0x974a2b[_0x214da5(0xc5)],_0x1b4a32=ratings[_0x2dad9b];_0x1b4a32?(_0x435d93[_0x214da5(0xac)]=_0x214da5(0xb9)+_0x1b4a32+_0x214da5(0xb0),_0x435d93[_0x214da5(0xa8)][_0x214da5(0xcb)](_0x214da5(0xc6)),_0x4f5bbf[_0x214da5(0xac)]=_0x214da5(0xc7)+ORR[_0x2dad9b]+_0x214da5(0xc3),_0x4f5bbf[_0x214da5(0xa8)][_0x214da5(0xcb)](_0x214da5(0xc6)),_0x5e004a[_0x214da5(0xac)]=_0x214da5(0xbc)+ERL[_0x2dad9b]+_0x214da5(0xc1),_0x5e004a[_0x214da5(0xa8)][_0x214da5(0xcb)](_0x214da5(0xc6)),_0x5004d3['textContent']=_0x214da5(0xa4)+ELSR[_0x2dad9b]+'\x20/\x2015',_0x5004d3[_0x214da5(0xa8)][_0x214da5(0xcb)](_0x214da5(0xc6)),_0x4c9284[_0x214da5(0xac)]='混响时间T60干瘪程度\x20|\x20T60\x20Flatness\x20Inside\x20Window(%):\x20'+TFIW[_0x2dad9b]+_0x214da5(0xa2),_0x4c9284[_0x214da5(0xa8)][_0x214da5(0xcb)]('hidden'),_0x39e126[_0x214da5(0xac)]='300Hz以下最低点\x20|\x20Deepest\x20Notch\x20Below\x20300\x20Hz(dB):\x20'+DNBT[_0x2dad9b]+'\x20/\x2020',_0x39e126[_0x214da5(0xa8)]['remove'](_0x214da5(0xc6))):(_0x435d93[_0x214da5(0xa8)][_0x214da5(0xa3)](_0x214da5(0xc6)),_0x4f5bbf[_0x214da5(0xa8)][_0x214da5(0xa3)](_0x214da5(0xc6)),_0x5e004a[_0x214da5(0xa8)]['add'](_0x214da5(0xc6)),_0x5004d3[_0x214da5(0xa8)][_0x214da5(0xa3)](_0x214da5(0xc6)),_0x4c9284[_0x214da5(0xa8)][_0x214da5(0xa3)]('hidden'),_0x39e126[_0x214da5(0xa8)][_0x214da5(0xa3)](_0x214da5(0xc6)));}function _0x531b(){var _0x4c89bf=['6CYHRxb','75218HhuTXk','ELSRText','remove','警告：长、宽、高值远高于正常教室\x20|\x20Warning:\x20Length,\x20width\x20or\x20height\x20are\x20too\x20big\x20for\x20classrooms.','TFIWText','10IHYQFg','imageSelect','addEventListener','\x20/\x2015','add','早期比晚期反射\x20|\x20Early\x20vs.\x20Late\x20Sound\x20Ratio(dB):\x20','src','471699tKhNVM','getElementById','classList','click','教室体积\x20|\x20Volume:\x20\x20','744410SUxmCV','textContent','4801573bgIRDV','错误：长、宽、高必须为有效的数值\x20|\x20Error:\x20No\x20valid\x20input','错误：长、宽、高均不能为非正数\x20|\x20Error:\x20Length,\x20width\x20or\x20height\x20should\x20be\x20positive.','\x20/\x20100','toFixed','log','preventDefault','4826496ocDqzj','17dIlLHH','.png','1199GLKOOQ','width','评分\x20|\x20Rating：','dynamicImage','aboutButton','早期反射声压比\x20|\x20Early\x20Reflection\x20Level(dB):\x20','37932kmdDKq','22596duuHKN','height','imageText','\x20/\x2020','result','\x20/\x2030','21lSZpCU','value','hidden','频率响应曲线图\x20|\x20Operational\x20Room\x20Response(%):\x20'];_0x531b=function(){return _0x4c89bf;};return _0x531b();}document[_0x16f5cb(0xa7)](_0x16f5cb(0xbb))[_0x16f5cb(0xa1)](_0x16f5cb(0xa9),function(){window['location']['href']='https://www.chinathinksbig.com/';});
+    </script>
+</body>
+</html>
